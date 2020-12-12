@@ -1,7 +1,7 @@
 import React from "react";
 import {HeadingContent, Markdown} from "../../model";
 
-import "./MindNode.scss";
+import "./MindNode.less";
 
 const MindNode: React.FC<{
   // title: HeadingContent[];
