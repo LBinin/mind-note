@@ -1,16 +1,123 @@
+@border-width: 3px;
+@border-color: #e05250;
+@node-padding: 20px;
+
+@link-line-startY: 35px;
+@link-line-cap-radius: 8px;
+
 .mind-node {
   display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  // 连接线
+  &__link-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: block;
+    //height: @border-width;
+    //background: @border-color;
+    z-index: 1;
+    border: @border-width solid @border-color;
+    //border-style: solid;
+    border-right: 0 transparent;
+    //top: @link-line-startY;
+    //height: 0;
+    height: 100%;
+    border-top: 0 transparent;
+    border-bottom: 0 transparent;
+  }
 
   &__content {
+    position: relative;
+    //margin: 10px 0;
+    padding: 10px @node-padding;
+    background: #fff;
+
+    //&::after {
+    //  content: "";
+    //  display: block;
+    //  width: @border-width;
+    //  height: 100%;
+    //  position: absolute;
+    //  top: 0;
+    //  right: -@border-width;
+    //  background: @border-color;
+    //}
+
     &-title {
-
+      border: @border-width solid @border-color;
+      background: #fff;
+      border-radius: 8px;
+      padding: 0.6em 1em;
+      display: inline-block;
+      color: #303133;
+      position: relative;
+      z-index: 2;
     }
-    &-callout {
 
+    &-callout {
+      font-size: 0.8em;
+      color: #909399;
+      border-left: 4px solid #C0C4CC;
+      margin-left: 10px;
+      padding: 5px 10px;
+
+      .callout-item {
+        padding: 0.2em 0;
+      }
     }
   }
 
   &__children {
+    display: flex;
+    flex-direction: column;
+  }
 
+  /* 带状态 Node */
+
+  &.root-node {
+    & > .mind-node__link-line {
+      left: @node-padding;
+    }
+  }
+
+  &.single-child {
+    align-items: flex-start;
+  }
+
+  &.no-children {
+    //& > .mind-node__content {
+    //  &::after {
+    //    display: none;
+    //  }
+    //}
+    & > .mind-node__link-line {
+      width: @node-padding;
+    }
+    &.first-child > .mind-node__link-line {
+      top: @link-line-startY !important;
+    }
+  }
+
+  &.first-child {
+    & > .mind-node__link-line {
+      //top: @link-line-startY;
+      top: 50%;
+      bottom: 0;
+      border-top: @border-width solid @border-color;
+      border-top-left-radius: @link-line-cap-radius;
+    }
+  }
+
+  &.last-child {
+    & > .mind-node__link-line {
+      bottom: 50%;
+      border-top: 0 transparent;
+      border-bottom: @border-width solid @border-color;
+      border-bottom-left-radius: @link-line-cap-radius;
+    }
   }
 }
