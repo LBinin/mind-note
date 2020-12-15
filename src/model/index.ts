@@ -4,6 +4,7 @@ export enum Markdown {
   InlineCode = "inlineCode",
   Blockquote = "blockquote",
   Paragraph = "paragraph",
+  Strong = "strong",
 }
 
 // https://github.com/syntax-tree/mdast
@@ -11,24 +12,27 @@ export enum Markdown {
 export type ASTNode = MarkdownHeading | MarkdownBlockquote;
 export type MarkdownDepth = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type HeadingContent = MarkdownText | MarkdownInlineCode;
+export type HeadingContent = MarkdownText | MarkdownInlineCode | MarkdownStrong;
 export type BlockquoteContent = MarkdownParagraph;
+
+export type ParagraphContent = MarkdownText | MarkdownInlineCode | MarkdownStrong;
+export type StrongContent = MarkdownText | MarkdownInlineCode;
 
 /* 支持的 MD 语法 */
 export interface MarkdownHeading {
   type: Markdown.Heading;
   depth: MarkdownDepth;
-  children: Array<HeadingContent>;
+  children: HeadingContent[];
 }
 
 export interface MarkdownBlockquote {
   type: Markdown.Blockquote;
-  children: Array<BlockquoteContent>;
+  children: BlockquoteContent[];
 }
 
 export interface MarkdownParagraph {
   type: Markdown.Paragraph,
-  children: MarkdownText | MarkdownInlineCode;
+  children: ParagraphContent[];
 }
 
 /* 行内节点（基本节点） */
@@ -42,9 +46,14 @@ export interface MarkdownInlineCode {
   value: string;
 }
 
+export interface MarkdownStrong {
+  type: Markdown.Strong;
+  children: StrongContent[];
+}
+
 /* Mind Node */
 export interface MindNodeItem {
-  title?: any;
-  callout?: any[];
-  children?: any[];
+  title?: HeadingContent[];
+  callout?: BlockquoteContent[];
+  children?: MindNodeItem[];
 }

@@ -1,57 +1,69 @@
 import {Node} from "unist";
-import {ASTNode, HeadingContent, Markdown, MarkdownDepth} from "../model";
+import {ASTNode, HeadingContent, Markdown, MarkdownDepth, MarkdownHeading, MindNodeItem} from "../model";
 
-export function resolveASTNodeToMindNode (nodes: ASTNode[]) {
-  let nextIndex = 0; // 当前遍历下标
-
-  while (nextIndex < nodes.length) {
-
-    
-
-    nextIndex++;
+/**
+ * 构建 Mind Nodes 层级关系
+ * @param nodes mdast 抽象语法树列表
+ */
+export function buildMindNodes(nodes: ASTNode[]) {
+  if (nodes.length < 1) {
+    return;
   }
 
-  /**
-   *
-   * @param currDepth 当前深度
-   * @param index 当前节点 index
-   * @param node 当前节点
-   */
-  const resolveMarkdownNodeToMindNodes = (currDepth: MarkdownDepth, node: ASTNode) => {
-    const children: any[] = [];
-    nextIndex++;
+  let buildProgressIndex = 0;
 
-    const currMindNode: {
-      title?: HeadingContent[],
-      children?: any[],
-    } = {}
+  const buildMindNodes = (depth: number) => {
+    const currLevel: MindNodeItem[] = [];
 
-    switch (node.type) {
-      case Markdown.Heading:
-        if (currDepth === node.depth) {
-          currMindNode.title = node.children;
-          // children.push({
-          //   title: ,
-          // });
-        } else {
-          currMindNode.children = resolveMarkdownNodeToMindNodes(node.depth, node);
-        }
-        break;
-      case Markdown.Blockquote:
-        const prevNode = children[children.length - 1];
-        if (!prevNode.callout) {
-          prevNode.callout = []
-        }
-        prevNode.callout.push(node.children);
-        break;
-      default:
-        break;
+    while (buildProgressIndex < nodes.length) {
+      const node = nodes[buildProgressIndex];
+      // debugger;
+      switch (node.type) {
+        case Markdown.Heading:
+          // 同级 title
+          if (node.depth === depth) {
+            const mindNode: MindNodeItem = {
+              title: node.children,
+            };
+            currLevel.push(mindNode);
+          }
+
+          // 上一级 title，当前级结束，返回 currLevel 所有 node
+          if (node.depth < depth) {
+            buildProgressIndex--;
+            return currLevel;
+          }
+
+          // 下钻
+          if (node.depth > depth) {
+            const prevMindNode = currLevel[currLevel.length - 1];
+            prevMindNode.children = buildMindNodes(node.depth);
+          }
+          break;
+        case Markdown.Blockquote:
+          if (currLevel.length === 0) { break; }
+
+          const prevMindNode = currLevel[currLevel.length - 1];
+
+          if (!prevMindNode.callout) {
+            prevMindNode.callout = [];
+          }
+
+          node.children && prevMindNode.callout.push(...node.children)
+          break;
+        default:
+          break;
+      }
+
+      buildProgressIndex++;
     }
 
-    if (nextIndex < nodes.length) {
-      resolveMarkdownNodeToMindNodes(currDepth, nodes[nextIndex])
-    }
+    return currLevel;
+  }
 
-    return children;
-  };
+  const firstHeadingNodeIndex = nodes.findIndex(i => i.type === Markdown.Heading);
+
+  return buildMindNodes(
+    (nodes[firstHeadingNodeIndex] as MarkdownHeading).depth,
+  );
 }

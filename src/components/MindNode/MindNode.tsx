@@ -1,13 +1,14 @@
 import React, {useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
-import {HeadingContent, Markdown} from "../../model";
+import {BlockquoteContent, HeadingContent, Markdown} from "../../model";
 import classNames from "classnames";
 
 import "./MindNode.less";
+import {resolveCallout, resolveTitle} from "../../utils/MindNodeResolver";
 
 const MindNode: React.FC<{
   // title: HeadingContent[];
-  title: string;
-  callout?: string[];
+  title: HeadingContent[];
+  callout?: BlockquoteContent[];
   className?: any;
   hasParent?: boolean;
 }> = props => {
@@ -105,11 +106,13 @@ const MindNode: React.FC<{
     <div className={mindNodeClassString}>
 
       <div className="mind-node-body">
-        <div className="mind-node-body-title">{title}</div>
+        <div className="mind-node-body-title">{resolveTitle(title)}</div>
 
         {callout && (
           <div className="mind-node-body-callout">
-            {callout.map(item => <div className="mind-node-body-callout-item" key={item}>{item}</div>)}
+            {callout.map((item, index) => (
+              <div className="mind-node-body-callout-item" key={index}>{resolveCallout(item)}</div>
+            ))}
           </div>
         )}
       </div>
