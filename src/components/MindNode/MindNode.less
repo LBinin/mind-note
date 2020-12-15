@@ -1,123 +1,130 @@
-@border-width: 3px;
+@border-width: 3px; // Link line 宽度，建议为偶数
 @border-color: #e05250;
-@node-padding: 20px;
 
-@link-line-startY: 35px;
-@link-line-cap-radius: 8px;
+@node-border-radius: 12px;
+@node-spacing-width: 20px;    // Node 水平间隔
+@node-spacing-height: 10px;   // Node 竖直间隔
+
+@link-line-cap-radius: 8px;   // Link Line 连接处弯曲半径
 
 .mind-node {
   display: flex;
   align-items: center;
   position: relative;
-  overflow: hidden;
 
-  // 连接线
-  &__link-line {
-    position: absolute;
-    left: 0;
-    right: 0;
-    display: block;
-    //height: @border-width;
-    //background: @border-color;
-    z-index: 1;
+  &-body {
     border: @border-width solid @border-color;
-    //border-style: solid;
-    border-right: 0 transparent;
-    //top: @link-line-startY;
-    //height: 0;
-    height: 100%;
-    border-top: 0 transparent;
-    border-bottom: 0 transparent;
-  }
-
-  &__content {
-    position: relative;
-    //margin: 10px 0;
-    padding: 10px @node-padding;
+    border-radius: @node-border-radius;
+    margin: @node-spacing-height @node-spacing-width;
+    padding: 0.6em 1em;
     background: #fff;
 
-    //&::after {
-    //  content: "";
-    //  display: block;
-    //  width: @border-width;
-    //  height: 100%;
-    //  position: absolute;
-    //  top: 0;
-    //  right: -@border-width;
-    //  background: @border-color;
-    //}
-
     &-title {
-      border: @border-width solid @border-color;
-      background: #fff;
-      border-radius: 8px;
-      padding: 0.6em 1em;
-      display: inline-block;
+      font-size: 1.1em;
       color: #303133;
-      position: relative;
-      z-index: 2;
+      white-space: pre;
+      line-height: 1.8em;
     }
 
     &-callout {
-      font-size: 0.8em;
+      font-size: 0.9em;
       color: #909399;
       border-left: 4px solid #C0C4CC;
-      margin-left: 10px;
-      padding: 5px 10px;
+      padding-left: 0.8em;
+      margin: 0.5em 0 0.3em;
 
-      .callout-item {
-        padding: 0.2em 0;
+      &-item {
+        white-space: pre;
+        line-height: 1.8em;
       }
     }
   }
 
-  &__children {
-    display: flex;
-    flex-direction: column;
-  }
+  &-children {
+    position: relative;
 
-  /* 带状态 Node */
-
-  &.root-node {
-    & > .mind-node__link-line {
-      left: @node-padding;
+    &::before {
+      content: "";
+      display: block;
+      position: absolute;
+      height: @border-width;
+      width: @node-spacing-width;
+      background: @border-color;
+      top: 50%;
+      transform: translateY(-@border-width / 2);
+      left: -@node-spacing-width;
     }
   }
 
-  &.single-child {
-    align-items: flex-start;
+  /* Link Line */
+
+  // Children 连接父节点 Link
+  &:not(.first-child):not(.last-child):not(.root-node) {
+    &::before {
+      content: "";
+      display: block;
+      width: @border-width;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      background: @border-color;
+      transform: translateX(-50%);
+    }
   }
 
-  &.no-children {
-    //& > .mind-node__content {
-    //  &::after {
-    //    display: none;
-    //  }
-    //}
-    & > .mind-node__link-line {
-      width: @node-padding;
-    }
-    &.first-child > .mind-node__link-line {
-      top: @link-line-startY !important;
-    }
+  // 囊括子节点 Link
+  &:not(.root-node)::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    //left: -@node-spacing-width - @border-width;
+    width: @node-spacing-width;
+    height: @border-width;
+    background: @border-color;
+    //right: -@node-spacing-width - @border-width;
+    //border: @border-width / 2 solid @border-color;
+    transform: translateY(-50%);
+    top: 50%;
+    //width: @node-spacing-width;
   }
 
   &.first-child {
-    & > .mind-node__link-line {
-      //top: @link-line-startY;
+    &::after {
+      height: unset;
+      background: unset;
       top: 50%;
-      bottom: 0;
-      border-top: @border-width solid @border-color;
+      bottom: 0 - @border-width;
+      //bottom: -@node-spacing-height - @border-width * 2;
+      //transform: translate(-@border-width / 2);
+      transform: translate(-@border-width / 2, @border-width / 2);
+      border: @border-width solid @border-color;
+      border-bottom: 0 transparent;
+      border-right: 0 transparent;
       border-top-left-radius: @link-line-cap-radius;
     }
   }
 
   &.last-child {
-    & > .mind-node__link-line {
+    &::after {
+      height: unset;
+      background: unset;
       bottom: 50%;
+      //top: -@node-spacing-height - @border-width * 2;
+      top: 0 - @border-width;
+      transform: translate(-@border-width / 2, @border-width / 2);
+      border: @border-width solid @border-color;
       border-top: 0 transparent;
-      border-bottom: @border-width solid @border-color;
+      border-right: 0 transparent;
       border-bottom-left-radius: @link-line-cap-radius;
+    }
+  }
+
+  &.single-child {
+    & > .mind-node-children > .mind-node {
+      &::before {
+        content: unset;
+      }
     }
   }
 }

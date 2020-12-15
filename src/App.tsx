@@ -27,7 +27,8 @@ function App() {
 > 异步执行 flushPassiveEffects 函数
 
 ## mutation
-  `
+`;
+
   return (
     <div>
       <MindMap markdown={dataSource}/>

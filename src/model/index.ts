@@ -41,3 +41,10 @@ export interface MarkdownInlineCode {
   type: Markdown.InlineCode;
   value: string;
 }
+
+/* Mind Node */
+export interface MindNodeItem {
+  title?: any;
+  callout?: any[];
+  children?: any[];
+}

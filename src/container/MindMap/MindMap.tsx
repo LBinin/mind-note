@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 
 import remark from "remark";
-import {ASTNode, Markdown, MarkdownDepth} from "../../model";
+import {ASTNode, Markdown, MarkdownDepth, MarkdownHeading, MindNodeItem} from "../../model";
 import MindNode from "../../components/MindNode/MindNode";
 
 const mindnode = [{
@@ -16,13 +16,6 @@ const mindnode = [{
       children: [
         {
           title: "调用 `getSnapshotBeforeUpdate` 生命周期",
-          callout: [
-            "此时还没有产生页面上可见的**更新**",
-            "同步进行，目的是为了保证只执行一次",
-          ]
-        },
-        {
-          title: "2调用 `getSnapshotBeforeUpdate` 生命周期",
           callout: [
             "此时还没有产生页面上可见的**更新**",
             "同步进行，目的是为了保证只执行一次",
@@ -58,6 +51,63 @@ const mindnode = [{
   ]
 }];
 
+let buildProgressIndex = 0;
+
+const buildMindNodes = (depth: number, node: ASTNode) => {
+  const currLevel: MindNodeItem[] = [];
+
+  const mindNode: MindNodeItem = {
+    title: node.children,
+  };
+
+  switch (node.type) {
+    case Markdown.Heading:
+      if (node.depth <= depth) {
+        currLevel.push(node);
+      } else {
+        mindNode.children = buildMindNodes(node.depth, node);
+      }
+      break;
+    case Markdown.Blockquote:
+      if (!mindNode.callout) {
+        mindNode.callout = [];
+      }
+      mindNode.callout.push(node.children)
+      break;
+    default:
+      break;
+  }
+
+  return currLevel;
+}
+
+const renderMindMap = (nodes: any[], hasParent?: boolean, isRoot?: boolean) => {
+  return nodes.map((node: any, index: number) => {
+    const classNames = {
+      "root-node": isRoot,
+    }
+
+    if (nodes.length > 1) {
+      Object.assign(classNames, {
+        "first-child": index === 0,
+        "last-child": index === nodes.length - 1,
+      })
+    }
+
+    return (
+      <MindNode
+        key={node.title}
+        hasParent={hasParent}
+        title={node.title}
+        callout={node.callout}
+        className={classNames}
+      >
+        {node.children && renderMindMap(node.children, true)}
+      </MindNode>
+    )
+  })
+}
+
 const MindMap: React.FC<{
   markdown: string;
 }> = props => {
@@ -72,53 +122,25 @@ const MindMap: React.FC<{
     return null
   }
 
+
   const firstHeadingNodeIndex = allMarkdownNodes.findIndex(i => i.type === Markdown.Heading);
+
+  buildMindNodes(
+    (allMarkdownNodes[firstHeadingNodeIndex] as MarkdownHeading).depth,
+    allMarkdownNodes[firstHeadingNodeIndex]
+  )
+  // const mindNode
+
+  for (let i = firstHeadingNodeIndex; i < allMarkdownNodes.length; i++) {
+
+  }
 
   // <MindNode key={`${currDepth}-${node.children.map(i => i.value)}`} title={node.children}/>
 
   console.log(allMarkdownNodes)
-  // const generateNode = node => {
-  //
-  // };
-
-  // const mapNodes = firstHeadingNode && resolveMarkdownNodeToMindNodes(
-  //   1,
-  //   firstHeadingNodeIndex,
-  //   allMarkdownNodes[firstHeadingNodeIndex]
-  // );
-
-  // console.log(mapNodes)
-
-  const renderMindMap = (nodes: any[], hasParent?: boolean, isRoot?: boolean) => {
-    return nodes.map((node: any, index: number) => {
-      const classNames = {
-        "root-node": isRoot,
-      }
-
-      if (nodes.length > 1) {
-        Object.assign(classNames, {
-          "first-child": index === 0,
-          "last-child": index === nodes.length - 1,
-        })
-      }
-
-      return (
-        <MindNode
-          key={node.title}
-          hasParent={hasParent}
-          title={node.title}
-          callout={node.callout}
-          className={classNames}
-        >
-          {node.children && renderMindMap(node.children, true)}
-        </MindNode>
-      )
-    })
-  }
 
   return <div>
     {renderMindMap(mindnode, false, true)}
-    {/*{firstHeadingNode && resolveMarkdownNodeToMindNodes(1, firstHeadingNode)}*/}
   </div>
 }
 
