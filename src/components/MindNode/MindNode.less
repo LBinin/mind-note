@@ -1,9 +1,10 @@
-@border-width: 4px; // Link line 宽度，建议为偶数
+@border-width: 3px; // Link line 宽度，建议为偶数
 // @border-color: #e05250;
 
 @node-border-radius: 10px;
-@node-spacing-width: 20px;    // Node 水平间隔
-@node-spacing-height: 10px;   // Node 竖直间隔
+@node-spacing-width: 20px;            // Node 水平间隔
+@node-spacing-height: 10px;           // Node 竖直间隔
+@node-children-spacing-height: 15px;  // 不同 Node，其子孙元素和其他 Node 的子孙元素之间的距离
 
 @link-line-cap-radius: 8px;   // Link Line 连接处弯曲半径
 
@@ -42,6 +43,19 @@
     }
   }
 
+  &.collapsed {
+    & > .mind-node-children {
+      display: none;
+    }
+
+    & > .mind-node-body {
+      &::after {
+        content: "...";
+        //display: block;
+      }
+    }
+  }
+
   &-body {
     border: @border-width solid var(--color-node-border);
     border-radius: @node-border-radius;
@@ -76,6 +90,7 @@
 
   &-children {
     position: relative;
+    margin: @node-children-spacing-height 0;
 
     &::before {
       content: "";

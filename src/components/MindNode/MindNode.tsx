@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import classNames from "classnames";
 import {BlockquoteContent, HeadingContent} from "../../model";
 import {resolveCallout, resolveTitle} from "../../utils/MindNodeResolver";
@@ -13,15 +13,24 @@ const MindNode: React.FC<{
 }> = props => {
   const {title, callout, className, children} = props;
 
+  const [collapse, setCollapse] = useState<boolean>(false);
+
+  const childrenCount = React.Children.count(children);
+
   const mindNodeClassString = classNames("mind-node", className, {
-    // "no-children": childLength === 0,
-    "single-child": React.Children.count(children) === 1,
+    "single-child": childrenCount === 1,
+    collapsed: collapse && childrenCount > 0,
   });
+
+  const handleCollapseNode = (e: any) => {
+    setCollapse(v => !v);
+    e.stopPropagation();
+  }
 
   return (
     <div className={mindNodeClassString}>
 
-      <div className="mind-node-body">
+      <div className="mind-node-body" onDoubleClick={handleCollapseNode}>
         <div className="mind-node-body-title">{resolveTitle(title)}</div>
 
         {callout && (

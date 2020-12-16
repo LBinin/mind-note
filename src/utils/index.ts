@@ -19,6 +19,7 @@ export function buildMindNodes(nodes: ASTNode[]) {
       const node = nodes[buildProgressIndex];
       // debugger;
       switch (node.type) {
+        /* 标题元素 */
         case Markdown.Heading:
           // 同级 title
           if (node.depth === depth) {
@@ -40,6 +41,8 @@ export function buildMindNodes(nodes: ASTNode[]) {
             prevMindNode.children = buildMindNodes(node.depth);
           }
           break;
+
+        /* 引用 */
         case Markdown.Blockquote:
           if (currLevel.length === 0) { break; }
 
@@ -50,6 +53,11 @@ export function buildMindNodes(nodes: ASTNode[]) {
           }
 
           node.children && prevMindNode.callout.push(...node.children)
+          break;
+
+        /* 分割线 */
+        case Markdown.ThematicBreak:
+          // TODO
           break;
         default:
           break;

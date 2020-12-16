@@ -2,8 +2,8 @@ import React, {useMemo} from "react";
 
 import remark from "remark";
 import {buildMindNodes} from "../../utils";
+import {ASTNode, MindNodeItem} from "../../model";
 import MindNode from "../../components/MindNode/MindNode";
-import {ASTNode, Markdown, MindNodeItem} from "../../model";
 
 const renderMindMap = (nodes: MindNodeItem[], hasParent?: boolean, isRoot?: boolean) => {
   return nodes.map((node: MindNodeItem, index: number) => {
@@ -51,14 +51,11 @@ const MindMap: React.FC<{
     return null
   }
 
-
-  const firstHeadingNodeIndex = allMarkdownNodes
-
   const dataSource = buildMindNodes(allMarkdownNodes)
 
-  return <div>
-    {dataSource && renderMindMap(dataSource, false, true)}
-  </div>
+  // console.log(allMarkdownNodes)
+
+  return <div>{dataSource && renderMindMap(dataSource, false, true)}</div>
 }
 
 export default MindMap;
