@@ -8,14 +8,14 @@ import {Markdown, BlockquoteContent, HeadingContent, MarkdownParagraph, Markdown
  * 抽象节点解析：Title
  */
 export function resolveTitle(titleList: HeadingContent[]) {
-  return titleList.map(title => {
+  return titleList.map((title, index) => {
     switch (title.type) {
       case Markdown.Text:
         return title.value
       case Markdown.InlineCode:
         return <code key={title.value}>{title.value}</code>
       case Markdown.Strong:
-        return <b>{resolveStrong(title)}</b>
+        return <b key={index}>{resolveStrong(title)}</b>
       default:
         return null;
     }
@@ -26,7 +26,6 @@ export function resolveTitle(titleList: HeadingContent[]) {
  * 抽象节点解析：Callout
  */
 export function resolveCallout(callout: BlockquoteContent) {
-  console.log(callout)
   switch (callout.type) {
     case Markdown.Paragraph:
       return <p>{resolveParagraph(callout)}</p>
@@ -62,7 +61,7 @@ export function resolveStrong(strong: MarkdownStrong) {
       case Markdown.Text:
         return item.value
       case Markdown.InlineCode:
-        return <code>{item.value}</code>
+        return <code key={item.value}>{item.value}</code>
       default:
         return null;
     }

@@ -9,6 +9,7 @@ const renderMindMap = (nodes: MindNodeItem[], hasParent?: boolean, isRoot?: bool
   return nodes.map((node: MindNodeItem, index: number) => {
     const classNames = {
       "root-node": isRoot,
+      // "rainbow": isRoot,
     }
 
     if (nodes.length > 1) {

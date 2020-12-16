@@ -1,4 +1,4 @@
-@border-width: 3px; // Link line 宽度，建议为偶数
+@border-width: 4px; // Link line 宽度，建议为偶数
 // @border-color: #e05250;
 
 @node-border-radius: 10px;
@@ -17,16 +17,30 @@
   align-items: center;
   position: relative;
 
-  --color-node-border: #e05250;
+  --color-node-primary: #e05250;
+  --color-node-border: var(--color-node-primary);
+  --color-node-font: var(--color-node-primary);
 
-  // Node Boarder Theme
-  &.gold, &.gold & {
-    --color-node-border: gold;
+  // 彩色主题
+  &.rainbow {
+    & > .mind-node-children {
+      & > .mind-node:nth-of-type(1) {
+        &, .mind-node {
+          --color-node-primary: #e05250;
+        }
+      }
+      & > .mind-node:nth-of-type(2) {
+        &, .mind-node {
+          --color-node-primary: #F8932E;
+        }
+      }
+      & > .mind-node:nth-of-type(3) {
+        &, .mind-node {
+          --color-node-primary: #FEC938;
+        }
+      }
+    }
   }
-
-  // .mind-node.gold, .mind-node.gold .mind-node {
-
-  // }
 
   &-body {
     border: @border-width solid var(--color-node-border);
@@ -155,13 +169,15 @@
     background: @color-code-bg;
     padding: 0.3em 0.6em;
     border-radius: 6px;
-    color: @color-code-font;
+    color: var(--color-node-font);
+    //color: @color-code-font;
     vertical-align: middle;
     font-family: "Fira Code";
     font-size: 0.8em;
   }
 
   b {
-    color: @color-strong-font;
+    color: var(--color-node-font);
+    //color: @color-strong-font;
   }
 }

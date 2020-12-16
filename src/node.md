@@ -44,12 +44,13 @@
 > 对 flag 包含 **Placement** 的 Fiber
 
 
-#### 1. 寻找最近的 Host Component
+#### 1. 寻找最近的父级 Host 节点：`parentDOM`
 
-#### 2. 寻找 Host 类型的兄弟节点
+#### 2. 寻找 Host 类型的兄弟节点：`siblingDOM`
 > 这里复杂体现在查询可能是「**跨层级**」
 
 #### 3. 插入文档
+> 在 ReactDOM 中实现，调用 JSAPI：
 > `parentDOM.appendChild(childDOM)`
 > `parentDOM.insertBefore(childDOM, siblingDOM)`
 
@@ -64,7 +65,7 @@
 ##### 执行所有 `useLayoutEffect` 的销毁函数
 > 执行 `commitHookEffectListUnmount`
 
-##### ❓**为什么**要先执行所有销毁函数？
+##### ❓ **为什么**要先执行所有销毁函数？
 > 多个组件间可能「共用」同一个 `ref`。
 
 #### Host 组件
