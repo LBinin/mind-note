@@ -43,7 +43,7 @@ export function resolveParagraph(paragraph: MarkdownParagraph) {
       case Markdown.Text:
         return child.value
       case Markdown.InlineCode:
-        return <code key={child.value}>{child.value}</code>
+        return <code key={`${child.value}$$${index}`}>{child.value}</code>
       case Markdown.Strong:
         return <b key={index}>{resolveStrong(child)}</b>
       default:
