@@ -1,10 +1,9 @@
-import React, {useMemo, useRef} from "react";
-
 import remark from "remark";
 import {buildMindNodes} from "../../utils";
+import React, {useMemo, useRef} from "react";
 import {ASTNode, MindNodeItem} from "../../model";
 import MindNode from "../../components/MindNode/MindNode";
-import html2canvas from "html2canvas";
+import ScreenshotCaptureModal from "../../components/ScreenshotCapture/ScreenshotCaptureModal";
 
 const renderMindMap = (nodes: MindNodeItem[], hasParent?: boolean, isRoot?: boolean) => {
   return nodes.map((node: MindNodeItem, index: number) => {
@@ -43,7 +42,7 @@ const MindMap: React.FC<{
 }> = props => {
   const {markdown} = props;
 
-  const currTarget = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
 
   const allMarkdownNodes = useMemo<ASTNode[]>(
     () => markdown ? (remark().parse(markdown).children as ASTNode[]) : [],
@@ -56,22 +55,15 @@ const MindMap: React.FC<{
 
   const dataSource = buildMindNodes(allMarkdownNodes)
 
-  const handleTakeScreenshots = () => {
-    if (!currTarget.current) {
-      return;
-    }
+  return <>
+    {dataSource && (
+      <ScreenshotCaptureModal dataSource={dataSource} container={mapRef}/>
+    )}
 
-    const target = currTarget.current
-    html2canvas(target).then(canvas => {
-      document.body.parentElement!.appendChild(canvas);
-      // setCanvas(canvas)
-    })
-  }
-
-  return <div ref={currTarget}>
-    {dataSource && renderMindMap(dataSource, false, true, )}
-    <button onClick={handleTakeScreenshots}>screen shots</button>
-  </div>
+    <div className="mind-map-container" ref={mapRef}>
+      {dataSource && renderMindMap(dataSource, false, true)}
+    </div>
+  </>
 }
 
 export default MindMap;

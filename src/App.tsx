@@ -16,10 +16,10 @@ function App() {
   }, [])
 
   return (
-    <div>
+    <>
       <MindMap markdown={dataSource}/>
       {/*<NoteTOC/>*/}
-    </div>
+    </>
   );
 }
 
