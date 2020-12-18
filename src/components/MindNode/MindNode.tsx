@@ -30,7 +30,7 @@ const MindNode: React.FC<{
   return (
     <div className={mindNodeClassString}>
 
-      <div className="mind-node-body" onDoubleClick={handleCollapseNode}>
+      <div className="mind-node-body">
         <div className="mind-node-body-title">{resolveTitle(title)}</div>
 
         {callout && (
@@ -40,6 +40,9 @@ const MindNode: React.FC<{
             ))}
           </div>
         )}
+
+        {/*{children && <Button className="mind-node-body-collapse-btn" size="small" shape="circle" icon={<MinusOutlined />} onClick={handleCollapseNode}/>}*/}
+        {children && <button className="mind-node-body-collapse-btn" title="收缩节点" onClick={handleCollapseNode}>{collapse ? childrenCount : "-"}</button>}
       </div>
 
       {children && (<>

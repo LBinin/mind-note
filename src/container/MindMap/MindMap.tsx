@@ -1,9 +1,10 @@
-import React, {useMemo} from "react";
+import React, {useMemo, useRef} from "react";
 
 import remark from "remark";
 import {buildMindNodes} from "../../utils";
 import {ASTNode, MindNodeItem} from "../../model";
 import MindNode from "../../components/MindNode/MindNode";
+import html2canvas from "html2canvas";
 
 const renderMindMap = (nodes: MindNodeItem[], hasParent?: boolean, isRoot?: boolean) => {
   return nodes.map((node: MindNodeItem, index: number) => {
@@ -42,6 +43,8 @@ const MindMap: React.FC<{
 }> = props => {
   const {markdown} = props;
 
+  const currTarget = useRef<HTMLDivElement>(null);
+
   const allMarkdownNodes = useMemo<ASTNode[]>(
     () => markdown ? (remark().parse(markdown).children as ASTNode[]) : [],
     [markdown]
@@ -53,9 +56,22 @@ const MindMap: React.FC<{
 
   const dataSource = buildMindNodes(allMarkdownNodes)
 
-  // console.log(allMarkdownNodes)
+  const handleTakeScreenshots = () => {
+    if (!currTarget.current) {
+      return;
+    }
 
-  return <div>{dataSource && renderMindMap(dataSource, false, true)}</div>
+    const target = currTarget.current
+    html2canvas(target).then(canvas => {
+      document.body.parentElement!.appendChild(canvas);
+      // setCanvas(canvas)
+    })
+  }
+
+  return <div ref={currTarget}>
+    {dataSource && renderMindMap(dataSource, false, true, )}
+    <button onClick={handleTakeScreenshots}>screen shots</button>
+  </div>
 }
 
 export default MindMap;

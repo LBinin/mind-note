@@ -5,6 +5,7 @@
 @node-spacing-width: 20px;            // Node 水平间隔
 @node-spacing-height: 10px;           // Node 竖直间隔
 @node-children-spacing-height: 15px;  // 不同 Node，其子孙元素和其他 Node 的子孙元素之间的距离
+@node-collapse-size: 20px;
 
 @link-line-cap-radius: 8px;   // Link Line 连接处弯曲半径
 
@@ -12,6 +13,8 @@
 @color-code-bg: rgba(27, 31, 35, 0.05);
 @color-code-font: #e05250;
 @color-strong-font: #e05250;
+
+@color-node-bg: #fff;
 
 .mind-node {
   display: flex;
@@ -49,9 +52,8 @@
     }
 
     & > .mind-node-body {
-      &::after {
-        content: "...";
-        //display: block;
+      & > .mind-node-body-collapse-btn {
+        opacity: 1;
       }
     }
   }
@@ -61,7 +63,8 @@
     border-radius: @node-border-radius;
     margin: @node-spacing-height @node-spacing-width;
     padding: 0.6em 1em;
-    background: #fff;
+    background: @color-node-bg;
+    position: relative;
 
     &-title {
       font-size: 1.1em;
@@ -84,6 +87,38 @@
         & > p {
           margin: 0;
         }
+      }
+    }
+
+    &-collapse-btn {
+      position: absolute;
+      right: -@border-width / 2;
+      top: 50%;
+      transform: translate(50%, -50%);
+      appearance: none;
+      border: 2px solid var(--color-node-border);
+      border-radius: 50%;
+      height: @node-collapse-size;
+      width: @node-collapse-size;
+      line-height: @node-collapse-size * 7 / 8;
+      z-index: 2;
+      vertical-align: middle;
+      padding: 0;
+      background: @color-node-bg;
+      color: var(--color-node-border);
+      //font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.25s;
+      opacity: 0;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &:hover & {
+      &-collapse-btn {
+        opacity: 1;
       }
     }
   }

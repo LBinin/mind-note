@@ -15,18 +15,9 @@ function App() {
     fetch(MarkdownSourcePath).then(res => res.text()).then(setDataSource)
   }, [])
 
-  const handleTakeScreenshots = () => {
-    // const target = document.querySelector('#print') as HTMLElement
-    html2canvas(document.body).then(canvas => {
-      document.body.parentElement!.appendChild(canvas);
-      // setCanvas(canvas)
-    })
-  }
-
   return (
     <div>
       <MindMap markdown={dataSource}/>
-      <button onClick={handleTakeScreenshots}>screen shots</button>
       {/*<NoteTOC/>*/}
     </div>
   );
