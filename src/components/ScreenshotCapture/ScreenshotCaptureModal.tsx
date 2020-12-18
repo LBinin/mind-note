@@ -1,21 +1,25 @@
 import React, {useState} from "react";
-import {Button, Modal, message, Divider} from "antd";
-import {FileImageOutlined} from "@ant-design/icons";
-import {MindNodeItem} from "../../model";
-import ScreenshotCaptureForm, {ScreenshotCaptureFormOptions} from "./ScreenshotCaptureForm";
 import html2canvas from "html2canvas";
+import {MindNodeItem} from "../../model";
 import Iconfont from "../Iconfont/Iconfont";
+import {Modal, message, Divider} from "antd";
+import ScreenshotCaptureForm, {ScreenshotCaptureFormOptions} from "./ScreenshotCaptureForm";
 
 const ScreenshotCaptureModal: React.FC<{
+  visible?: boolean;
+  onCancel?: () => void;
   dataSource: MindNodeItem[];
   container: React.RefObject<HTMLElement | null>;
 }> = props => {
-  const {dataSource, container} = props;
+  const {dataSource, container, visible, onCancel} = props;
 
   const [screenshot, setScreenshot] = useState<string>();
-  const [screenshotVisible, setScreenshotVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
+  /**
+   * 根据用户选择生成对应图片
+   * @param value 表单 value
+   */
   const handleTakeScreenshots = (value: ScreenshotCaptureFormOptions) => {
     if (!value.target) {
       message.warn("目标节点不存在").then()
@@ -38,18 +42,15 @@ const ScreenshotCaptureModal: React.FC<{
 
     html2canvas(target, { backgroundColor: value.background }).then(canvas => {
       setScreenshot(canvas.toDataURL())
-      setScreenshotVisible(true);
       setLoading(false);
     })
   }
 
   return (<>
-    <Button onClick={() => setScreenshotVisible(true)} type="primary" icon={<Iconfont type="icon-xiangji-white"/>}>导出图片</Button>
-
     <Modal
       title={<><Iconfont type="icon-xiangji4"/> 图片导出</>}
-      visible={screenshotVisible}
-      onCancel={() => setScreenshotVisible(v => !v)}
+      visible={visible}
+      onCancel={onCancel}
       footer={null}
     >
       <ScreenshotCaptureForm

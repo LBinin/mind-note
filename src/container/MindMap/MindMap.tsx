@@ -3,7 +3,7 @@ import {buildMindNodes} from "../../utils";
 import React, {useMemo, useRef} from "react";
 import {ASTNode, MindNodeItem} from "../../model";
 import MindNode from "../../components/MindNode/MindNode";
-import ScreenshotCaptureModal from "../../components/ScreenshotCapture/ScreenshotCaptureModal";
+import ScreenshotCaptureBtn from "../../components/ScreenshotCapture/ScreenshotCaptureBtn";
 
 const renderMindMap = (nodes: MindNodeItem[], hasParent?: boolean, isRoot?: boolean) => {
   return nodes.map((node: MindNodeItem, index: number) => {
@@ -56,8 +56,9 @@ const MindMap: React.FC<{
   const dataSource = buildMindNodes(allMarkdownNodes)
 
   return <>
+    {/* 导出图片按钮 */}
     {dataSource && (
-      <ScreenshotCaptureModal dataSource={dataSource} container={mapRef}/>
+      <ScreenshotCaptureBtn dataSource={dataSource} container={mapRef}/>
     )}
 
     <div className="mind-map-container" ref={mapRef}>
