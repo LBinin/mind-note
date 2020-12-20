@@ -1,4 +1,4 @@
-import {Card} from "antd";
+import {Card, Divider, Space} from "antd";
 import remark from "remark";
 import React, {useMemo} from "react";
 import {buildMindNodes} from "../../utils";
@@ -55,8 +55,10 @@ const MindMap: React.FC<{
   const toolbar = <MindMapToolbar/>
 
   return (
-    <Card title={<><Iconfont type="icon-mind-map"/> 脑图预览</>} key="mindMap" className="mind-map-container" size="small" extra={toolbar}>
-      {dataSource && renderMindMap(dataSource, false, true)}
+    <Card title={<><Iconfont type="icon-mind-map"/> 脑图预览</>} key="mindMap" className="mind-map-card" size="small" extra={toolbar}>
+      <Space direction="vertical" className="mind-map-container" split={<Divider/>}>
+        {dataSource && renderMindMap(dataSource, false, true)}
+      </Space>
     </Card>
   )
 }
