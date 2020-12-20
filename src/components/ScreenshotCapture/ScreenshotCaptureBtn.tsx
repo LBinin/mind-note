@@ -9,6 +9,7 @@ const ScreenshotCaptureBtn: React.FC = props => {
 
   return (<>
     <Button
+      className="mind-note-screenshot-capture-btn"
       onClick={() => setScreenshotModalVisible(true)}
       type="primary"
       icon={<Iconfont type="icon-xiangji-white"/>}

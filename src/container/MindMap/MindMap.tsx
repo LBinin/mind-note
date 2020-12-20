@@ -1,12 +1,20 @@
+import {Card} from "antd";
 import remark from "remark";
 import React, {useMemo} from "react";
 import {buildMindNodes} from "../../utils";
 import {ASTNode, MindNodeItem} from "../../model";
 import MindNode from "../../components/MindNode/MindNode";
 
+import "./MindMap.less";
+import ScreenshotCaptureBtn from "../../components/ScreenshotCapture/ScreenshotCaptureBtn";
+import MindMapToolbar, {ConfigKey} from "./MindMapToolbar/MindMapToolbar";
+import Iconfont from "../../components/Iconfont/Iconfont";
+
 const renderMindMap = (nodes: MindNodeItem[], hasParent?: boolean, isRoot?: boolean) => {
   return nodes.map((node: MindNodeItem, index: number) => {
-    if (!node.title) { return null; }
+    if (!node.title) {
+      return null;
+    }
 
     const classNames = nodes.length > 1 ? {
       "first-child": index === 0,
@@ -44,11 +52,13 @@ const MindMap: React.FC<{
 
   const dataSource = buildMindNodes(allMarkdownNodes)
 
-  return <>
-    <div className="mind-map-container">
+  const toolbar = <MindMapToolbar/>
+
+  return (
+    <Card title={<><Iconfont type="icon-mind-map"/> 脑图预览</>} key="mindMap" className="mind-map-container" size="small" extra={toolbar}>
       {dataSource && renderMindMap(dataSource, false, true)}
-    </div>
-  </>
+    </Card>
+  )
 }
 
 export default MindMap;

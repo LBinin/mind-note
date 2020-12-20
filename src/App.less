@@ -1,0 +1,22 @@
+@import "./style/index";
+
+.mind-note-app-container {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  padding: @spacing-between;
+
+  .mind-map-container {
+    margin-left: @spacing-between !important;
+    margin-right: 0 !important;
+  }
+
+  &.layout-reverse {
+    flex-direction: row-reverse;
+
+    .mind-map-container {
+      margin-right: @spacing-between !important;
+      margin-left: 0 !important;
+    }
+  }
+}

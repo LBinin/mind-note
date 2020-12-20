@@ -44,6 +44,7 @@ const ScreenshotCaptureModal: React.FC<{
       visible={visible}
       onCancel={onCancel}
       footer={null}
+      destroyOnClose={true}
     >
       <ScreenshotCaptureForm
         onCapture={handleTakeScreenshots}
