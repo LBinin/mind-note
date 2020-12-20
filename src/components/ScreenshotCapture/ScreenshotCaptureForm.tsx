@@ -1,8 +1,7 @@
-import React from "react";
-import {Button, Form, Row, Select} from "antd";
-import {resolveTitle} from "../../utils/MindNodeResolver";
-import {MindNodeItem} from "../../model";
+import React, {useState} from "react";
 import Iconfont from "../Iconfont/Iconfont";
+import {Button, Form, Row, Select} from "antd";
+import {NODE_ROOT_CLASS} from "../../constant";
 
 enum ScreenshotCaptureFormItem {
   TARGET = "target",
@@ -22,11 +21,15 @@ export interface ScreenshotCaptureFormOptions {
 }
 
 const ScreenshotCaptureForm: React.FC<{
-  targetList: MindNodeItem[];
   onCapture?: (values: ScreenshotCaptureFormOptions) => void;
   loading?: boolean;
 }> = props => {
-  const {targetList, onCapture, loading} = props;
+  const {onCapture, loading} = props;
+
+  const [targetList] = useState<string[]>(() => {
+    const nodeList = document.querySelectorAll(`.${NODE_ROOT_CLASS}`);
+    return Array.from(nodeList).map(node => node.id);
+  })
 
   const [form] = Form.useForm();
 
@@ -38,15 +41,13 @@ const ScreenshotCaptureForm: React.FC<{
   return (
     <Form form={form} onChange={console.log}>
       {/* 选择节点 */}
-      {targetList && targetList.length && (
-        <Form.Item label="选择节点" name={ScreenshotCaptureFormItem.TARGET} initialValue="0">
-          <Select dropdownMatchSelectWidth={false}>
-            {targetList.map((item, index) => (
-              item.title && <Select.Option key={index} value={index + ""}>{resolveTitle(item.title)}</Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-      )}
+      <Form.Item label="选择节点" name={ScreenshotCaptureFormItem.TARGET}>
+        <Select dropdownMatchSelectWidth={false} placeholder="请选择节点">
+          {targetList.map((item, index) => (
+            <Select.Option key={item} value={item}>{decodeURIComponent(item)}</Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
 
       {/* 图片背景 */}
       <Form.Item label="图片背景" name={ScreenshotCaptureFormItem.BACKGROUND} initialValue={BackgroundColor.TRANSPARENT}>

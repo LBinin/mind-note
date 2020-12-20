@@ -7,19 +7,21 @@ import {Markdown, BlockquoteContent, HeadingContent, MarkdownParagraph, Markdown
 /**
  * 抽象节点解析：Title
  */
-export function resolveTitle(titleList: HeadingContent[]) {
-  return titleList.map((title, index) => {
+export function resolveTitle(titleList: HeadingContent[], plain?: boolean) {
+  const content = titleList.map((title, index) => {
     switch (title.type) {
       case Markdown.Text:
         return title.value
       case Markdown.InlineCode:
-        return <code key={title.value}>{title.value}</code>
+        return plain ? title.value : <code key={title.value}>{title.value}</code>
       case Markdown.Strong:
-        return <b key={index}>{resolveStrong(title)}</b>
+        return plain ? resolveStrong(title, plain) :  <b key={index}>{resolveStrong(title)}</b>
       default:
-        return null;
+        return plain ? "" : null;
     }
-  })
+  });
+
+  return plain ? content.join("") : content;
 }
 
 /**
@@ -55,15 +57,15 @@ export function resolveParagraph(paragraph: MarkdownParagraph) {
 /**
  * 基本节点解析：Strong
  */
-export function resolveStrong(strong: MarkdownStrong) {
+export function resolveStrong(strong: MarkdownStrong, plain?: boolean) {
   return strong.children.map(item => {
     switch (item.type) {
       case Markdown.Text:
         return item.value
       case Markdown.InlineCode:
-        return <code key={item.value}>{item.value}</code>
+        return plain ? item.value : <code key={item.value}>{item.value}</code>
       default:
-        return null;
+        return plain ? "" : null;
     }
   })
 }

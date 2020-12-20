@@ -1,5 +1,6 @@
-import React, {useState} from "react";
 import classNames from "classnames";
+import React, {useState} from "react";
+import {NODE_ROOT_CLASS} from "../../constant";
 import {BlockquoteContent, HeadingContent} from "../../model";
 import {resolveCallout, resolveTitle} from "../../utils/MindNodeResolver";
 
@@ -10,8 +11,9 @@ const MindNode: React.FC<{
   callout?: BlockquoteContent[];
   className?: any;
   hasParent?: boolean;
+  isRoot?: boolean;
 }> = props => {
-  const {title, callout, className, children} = props;
+  const {title, callout, className, isRoot, children} = props;
 
   const [collapse, setCollapse] = useState<boolean>(false);
 
@@ -19,6 +21,7 @@ const MindNode: React.FC<{
 
   const mindNodeClassString = classNames("mind-node", className, {
     "single-child": childrenCount === 1,
+    [NODE_ROOT_CLASS]: isRoot,
     collapsed: collapse && childrenCount > 0,
   });
 
@@ -27,8 +30,10 @@ const MindNode: React.FC<{
     e.stopPropagation();
   }
 
+  const currNodeId = encodeURIComponent("" + resolveTitle(title, true));
+
   return (
-    <div className={mindNodeClassString}>
+    <div className={mindNodeClassString} id={currNodeId}>
 
       <div className="mind-node-body">
         <div className="mind-node-body-title">{resolveTitle(title)}</div>
@@ -41,7 +46,6 @@ const MindNode: React.FC<{
           </div>
         )}
 
-        {/*{children && <Button className="mind-node-body-collapse-btn" size="small" shape="circle" icon={<MinusOutlined />} onClick={handleCollapseNode}/>}*/}
         {children && <button className="mind-node-body-collapse-btn" title="收缩节点" onClick={handleCollapseNode}>{collapse ? childrenCount : "-"}</button>}
       </div>
 

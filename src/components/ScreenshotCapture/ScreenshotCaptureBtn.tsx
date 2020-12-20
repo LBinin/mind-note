@@ -2,13 +2,8 @@ import React, {useState} from "react";
 import Iconfont from "../Iconfont/Iconfont";
 import {Button} from "antd";
 import ScreenshotCaptureModal from "./ScreenshotCaptureModal";
-import {MindNodeItem} from "../../model";
 
-const ScreenshotCaptureBtn: React.FC<{
-  dataSource: MindNodeItem[];
-  container: React.RefObject<HTMLElement | null>;
-}> = props => {
-  const {dataSource, container} = props;
+const ScreenshotCaptureBtn: React.FC = props => {
 
   const [screenshotModalVisible, setScreenshotModalVisible] = useState<boolean>(false);
 
@@ -24,8 +19,6 @@ const ScreenshotCaptureBtn: React.FC<{
     <ScreenshotCaptureModal
       visible={screenshotModalVisible}
       onCancel={() => setScreenshotModalVisible(v => !v)}
-      dataSource={dataSource}
-      container={container}
     />
   </>)
 };

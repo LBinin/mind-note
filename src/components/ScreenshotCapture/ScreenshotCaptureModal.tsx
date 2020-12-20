@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import html2canvas from "html2canvas";
-import {MindNodeItem} from "../../model";
 import Iconfont from "../Iconfont/Iconfont";
 import {Modal, message, Divider} from "antd";
 import ScreenshotCaptureForm, {ScreenshotCaptureFormOptions} from "./ScreenshotCaptureForm";
@@ -8,10 +7,8 @@ import ScreenshotCaptureForm, {ScreenshotCaptureFormOptions} from "./ScreenshotC
 const ScreenshotCaptureModal: React.FC<{
   visible?: boolean;
   onCancel?: () => void;
-  dataSource: MindNodeItem[];
-  container: React.RefObject<HTMLElement | null>;
 }> = props => {
-  const {dataSource, container, visible, onCancel} = props;
+  const {visible, onCancel} = props;
 
   const [screenshot, setScreenshot] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,16 +19,11 @@ const ScreenshotCaptureModal: React.FC<{
    */
   const handleTakeScreenshots = (value: ScreenshotCaptureFormOptions) => {
     if (!value.target) {
-      message.warn("目标节点不存在").then()
+      message.warn("请选择节点").then()
       return;
     }
 
-    if (!container.current) {
-      message.warn("脑图节点不存在，请刷新页面").then()
-      return;
-    }
-
-    const target = Array.from(container.current.children)[+value.target] as HTMLElement;
+    const target = document.getElementById(value.target) as HTMLElement;
 
     if (!target) {
       message.warn("目标节点不存在").then()
@@ -54,7 +46,6 @@ const ScreenshotCaptureModal: React.FC<{
       footer={null}
     >
       <ScreenshotCaptureForm
-        targetList={dataSource}
         onCapture={handleTakeScreenshots}
         loading={loading}
       />
