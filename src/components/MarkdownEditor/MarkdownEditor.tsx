@@ -16,6 +16,8 @@ const MarkdownEditor: React.FC<{
 }> = props => {
   const {value, onChange} = props;
 
+  const editorRef = useRef<Editor>(null)
+
   const [height, setHeight] = useState<number>(() => {
     // 20: 上下 margin
     // 3: 上中下 border
@@ -23,13 +25,17 @@ const MarkdownEditor: React.FC<{
   });
 
   const handleEditorChange = (params: any) => {
-    console.log({params})
-    console.log(params.data)
+    console.log(params)
+    if (params.source === "markdown" && editorRef.current) {
+      const content = editorRef.current.getInstance().getMarkdown();
+      onChange && onChange(content);
+    }
   }
 
   return (
     <Editor
-      initialValue="hello react editor world!"
+      ref={editorRef}
+      initialValue={value}
       previewStyle="tab"
       height={`${height}px`}
       initialEditType="markdown"
