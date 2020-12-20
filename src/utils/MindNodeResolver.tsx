@@ -2,7 +2,14 @@
  * 该解析器根据 mdast，解析出支持的对应的 md 语法
  */
 
-import {Markdown, BlockquoteContent, HeadingContent, MarkdownParagraph, MarkdownStrong} from "../model";
+import {
+  Markdown,
+  BlockquoteContent,
+  HeadingContent,
+  MarkdownParagraph,
+  MarkdownStrong,
+  MarkdownEmphasis
+} from "../model";
 
 /**
  * 抽象节点解析：Title
@@ -15,7 +22,9 @@ export function resolveTitle(titleList: HeadingContent[], plain?: boolean) {
       case Markdown.InlineCode:
         return plain ? title.value : <code key={title.value}>{title.value}</code>
       case Markdown.Strong:
-        return plain ? resolveStrong(title, plain) :  <b key={index}>{resolveStrong(title)}</b>
+        return plain ? resolveStrong(title, plain) : <b key={index}>{resolveStrong(title)}</b>
+      case Markdown.Emphasis:
+        return plain ? resolveEmphasis(title, plain) : <i key={index}>{resolveEmphasis(title)}</i>
       default:
         return plain ? "" : null;
     }
@@ -48,6 +57,8 @@ export function resolveParagraph(paragraph: MarkdownParagraph) {
         return <code key={`${child.value}$$${index}`}>{child.value}</code>
       case Markdown.Strong:
         return <b key={index}>{resolveStrong(child)}</b>
+      case Markdown.Emphasis:
+        return <i key={index}>{resolveEmphasis(child)}</i>
       default:
         return null;
     }
@@ -59,6 +70,22 @@ export function resolveParagraph(paragraph: MarkdownParagraph) {
  */
 export function resolveStrong(strong: MarkdownStrong, plain?: boolean) {
   return strong.children.map(item => {
+    switch (item.type) {
+      case Markdown.Text:
+        return item.value
+      case Markdown.InlineCode:
+        return plain ? item.value : <code key={item.value}>{item.value}</code>
+      default:
+        return plain ? "" : null;
+    }
+  })
+}
+
+/**
+ * 基本节点解析：Emphasis
+ */
+export function resolveEmphasis(emphasis: MarkdownEmphasis, plain?: boolean) {
+  return emphasis.children.map(item => {
     switch (item.type) {
       case Markdown.Text:
         return item.value

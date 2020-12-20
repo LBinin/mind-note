@@ -6,6 +6,7 @@ export enum Markdown {
   Paragraph = "paragraph",
   Strong = "strong",
   ThematicBreak = "thematicBreak",
+  Emphasis = "emphasis"
 }
 
 // https://github.com/syntax-tree/mdast
@@ -18,11 +19,12 @@ export type ASTNode = // 支持识别的 Markdown 语法，于 utils/index.ts �
 export type MarkdownDepth = 1 | 2 | 3 | 4 | 5 | 6;
 
 // 支持的语法中可能用到的行内节点
-export type HeadingContent = MarkdownText | MarkdownInlineCode | MarkdownStrong;
+export type HeadingContent = MarkdownText | MarkdownInlineCode | MarkdownStrong | MarkdownEmphasis;
 export type BlockquoteContent = MarkdownParagraph;
 
-export type ParagraphContent = MarkdownText | MarkdownInlineCode | MarkdownStrong;
+export type ParagraphContent = MarkdownText | MarkdownInlineCode | MarkdownStrong | MarkdownEmphasis;
 export type StrongContent = MarkdownText | MarkdownInlineCode;
+export type EmphasisContent = MarkdownText | MarkdownInlineCode;
 
 /* 支持的 MD 语法 */
 
@@ -61,6 +63,11 @@ export interface MarkdownInlineCode {
 export interface MarkdownStrong {
   type: Markdown.Strong;
   children: StrongContent[];
+}
+
+export interface MarkdownEmphasis {
+  type: Markdown.Emphasis;
+  children: EmphasisContent[];
 }
 
 /* Mind Node */
