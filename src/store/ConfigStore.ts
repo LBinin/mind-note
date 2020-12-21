@@ -27,7 +27,7 @@ interface UserConfigData {
 }
 
 export class ConfigStore {
-  previewMode = observable.box(this.getUserConfigByKey<PreviewMode>(UserConfig.PREVIEW_MODE) || PreviewMode.SAVE);
+  previewMode = observable.box(this.getUserConfigByKey<PreviewMode>(UserConfig.PREVIEW_MODE) || PreviewMode.LIVE);
   editorPosition = observable.box(this.getUserConfigByKey<EditorPosition>(UserConfig.EDITOR_POSITION) || EditorPosition.LEFT);
 
   @action.bound
