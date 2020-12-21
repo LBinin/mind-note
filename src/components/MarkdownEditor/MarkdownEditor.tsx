@@ -1,7 +1,7 @@
 import {observer} from "mobx-react";
+import {debounce} from "lodash";
 import React, {useEffect, useRef, useState} from "react";
-import ReactMarkdownEditor from "@uiw/react-md-editor";
-import {SUPPORT_TOOLBAR_COMMANDS} from "./EditorConfig";
+// import {SUPPORT_TOOLBAR_COMMANDS} from "./EditorConfig";
 
 import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
@@ -9,6 +9,7 @@ import { Editor } from '@toast-ui/react-editor';
 
 
 import "./MarkdownEditor.less";
+import {SPACING_BETWEEN} from "../../constant";
 
 const MarkdownEditor: React.FC<{
   value?: string;
@@ -20,12 +21,20 @@ const MarkdownEditor: React.FC<{
 
   const [height, setHeight] = useState<number>(() => {
     // 20: 上下 margin
-    // 3: 上中下 border
-    return document.body.clientHeight - 20;
+    return document.body.clientHeight - SPACING_BETWEEN * 2;
   });
 
+  useEffect(() => {
+    const handleResize = debounce((e) => {
+      setHeight(document.body.clientHeight - SPACING_BETWEEN * 2);
+    }, 500)
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [])
+
   const handleEditorChange = (params: any) => {
-    console.log(params)
     if (params.source === "markdown" && editorRef.current) {
       const content = editorRef.current.getInstance().getMarkdown();
       onChange && onChange(content);
@@ -47,18 +56,6 @@ const MarkdownEditor: React.FC<{
       }}
     />
   )
-
-  // return (
-  //   <ReactMarkdownEditor
-  //     className="mind-note-md-editor"
-  //     ref={editorRef}
-  //     value={value}
-  //     onChange={onChange}
-  //     preview="edit"
-  //     commands={SUPPORT_TOOLBAR_COMMANDS}
-  //     height={height}
-  //   />
-  // )
 }
 
 export default observer(MarkdownEditor);
