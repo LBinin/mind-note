@@ -1,22 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import MindMap from "./container/MindMap/MindMap";
 import {observer} from "mobx-react";
-import { DragSizing } from "react-drag-sizing"
-// import NoteTOC from "./container/NoteTOC/NoteTOC";
-import MarkdownEditor from "./components/MarkdownEditor/MarkdownEditor";
 import {configStore} from "./store";
 import classNames from "classnames";
+import React, {useEffect, useState} from 'react';
+import MindMap from "./container/MindMap/MindMap";
+// import NoteTOC from "./container/NoteTOC/NoteTOC";
+import MarkdownEditor from "./components/MarkdownEditor/MarkdownEditor";
 
 import "./App.less";
 
 // @ts-ignore
 import MarkdownSourcePath from "./node.md";
-import {SPACING_BETWEEN} from "./constant";
+import {EditorPosition} from "./store/ConfigStore";
 
 const App = observer(() => {
   const [dataSource, setDataSource] = useState<string | undefined>("");
   const previewMode = configStore.previewMode.get();
-  const editorPosition = configStore.editorPosition.get()
+  const editorPosition = configStore.editorPosition.get();
 
   useEffect(() => {
     fetch(MarkdownSourcePath).then(res => res.text()).then(setDataSource)
@@ -29,15 +28,15 @@ const App = observer(() => {
   }
 
   const appClassString = classNames("mind-note-app-container", {
-    "layout-reverse": editorPosition === "right",
+    "layout-reverse": editorPosition === EditorPosition.RIGHT,
+    "layout-editor-top": editorPosition === EditorPosition.TOP,
+    "layout-editor-bottom": editorPosition === EditorPosition.BOTTOM,
   })
 
   return (
     <div className={appClassString}>
       {dataSource && (
-        <DragSizing border="right" handlerClassName="markdown-editor-drag-sizing iconfont icon-tuozhuai" handlerOffset={-SPACING_BETWEEN} handlerWidth={SPACING_BETWEEN + 1}>
-          <MarkdownEditor value={dataSource} onChange={handleMarkdownCodeChange}/>
-        </DragSizing>
+        <MarkdownEditor value={dataSource} onChange={handleMarkdownCodeChange}/>
       )}
       {dataSource && <MindMap markdown={dataSource}/>}
       {/*<NoteTOC/>*/}

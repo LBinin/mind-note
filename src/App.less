@@ -5,28 +5,30 @@
   padding: var(--spacing-between);
 
   .mind-map-card {
-    margin-left: var(--spacing-between) !important;
-    margin-right: 0 !important;
+    margin: 0 0 0 var(--spacing-between) !important;
   }
 
   &.layout-reverse {
     flex-direction: row-reverse;
 
     .mind-map-card {
-      margin-right: var(--spacing-between) !important;
-      margin-left: 0 !important;
+      margin: 0 var(--spacing-between) 0 0 !important;
     }
   }
 
-  .markdown-editor-drag-sizing {
-    transition: background 0.25s;
-    display: flex;
-    align-items: center;
-    &:hover {
-      background: #f5f5f5;
+  &.layout-editor-top {
+    flex-direction: column;
+
+    .mind-map-card {
+      margin: var(--spacing-between) 0 0 0 !important;
     }
-    &::before {
-      color: #ccc;
+  }
+
+  &.layout-editor-bottom {
+    flex-direction: column-reverse;
+
+    .mind-map-card {
+      margin: 0 0 var(--spacing-between) 0 !important;
     }
   }
 }

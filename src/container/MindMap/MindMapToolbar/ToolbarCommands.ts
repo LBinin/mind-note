@@ -10,6 +10,12 @@ export default function toolbarCommandsHandler(key: ConfigKey, value?: any) {
     case ConfigKey.EDITOR_POSITION_LEFT:
       moveEditorTo(EditorPosition.LEFT);
       break;
+    case ConfigKey.EDITOR_POSITION_TOP:
+      moveEditorTo(EditorPosition.TOP);
+      break;
+    case ConfigKey.EDITOR_POSITION_BOTTOM:
+      moveEditorTo(EditorPosition.BOTTOM);
+      break;
     case ConfigKey.LIVE_PREVIEW:
       codeToMapLivePreview(value);
       break;

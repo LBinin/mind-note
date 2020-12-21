@@ -5,6 +5,8 @@ export enum UserConfig {
   PREVIEW_MODE = "MIND-NOTE-PREVIEW-MODE",
   MARKDOWN_CODE = "MARKDOWN-CODE",
   EDITOR_POSITION = "MIND-NOTE-EDITOR-POSITION",
+  EDITOR_WIDTH = "MIND-NOTE-EDITOR-WIDTH",
+  EDITOR_HEIGHT = "MIND-NOTE-EDITOR-HEIGHT",
 }
 
 export enum PreviewMode {
@@ -15,6 +17,8 @@ export enum PreviewMode {
 export enum EditorPosition {
   LEFT = "left",
   RIGHT = "right",
+  TOP = "top",
+  BOTTOM = "bottom",
 }
 
 interface UserConfigData {
@@ -44,14 +48,14 @@ export class ConfigStore {
     localStorage.setItem(key, value);
   }
 
-  getUserConfig(): UserConfigData {
+  getAllUserConfig(): UserConfigData {
     return {
       [UserConfig.PREVIEW_MODE]: localStorage.getItem(UserConfig.PREVIEW_MODE) as PreviewMode,
       [UserConfig.MARKDOWN_CODE]: localStorage.getItem(UserConfig.MARKDOWN_CODE),
     }
   }
 
-  getUserConfigByKey<T>(key: string): T | null {
+  getUserConfigByKey<T extends string>(key: string): T | null {
     return localStorage.getItem(key) as T | null;
   }
 }
