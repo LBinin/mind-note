@@ -6,8 +6,7 @@ import {ASTNode, MindNodeItem} from "../../model";
 import MindNode from "../../components/MindNode/MindNode";
 
 import "./MindMap.less";
-import ScreenshotCaptureBtn from "../../components/ScreenshotCapture/ScreenshotCaptureBtn";
-import MindMapToolbar, {ConfigKey} from "./MindMapToolbar/MindMapToolbar";
+import MindMapToolbar from "./MindMapToolbar/MindMapToolbar";
 import Iconfont from "../../components/Iconfont/Iconfont";
 
 const renderMindMap = (nodes: MindNodeItem[], hasParent?: boolean, isRoot?: boolean) => {
@@ -37,25 +36,20 @@ const renderMindMap = (nodes: MindNodeItem[], hasParent?: boolean, isRoot?: bool
 }
 
 const MindMap: React.FC<{
-  markdown: string;
+  markdown?: string;
+  modifiedTime?: Date;
 }> = props => {
-  const {markdown} = props;
+  const {markdown, modifiedTime} = props;
 
   const allMarkdownNodes = useMemo<ASTNode[]>(
     () => markdown ? (remark().parse(markdown).children as ASTNode[]) : [],
     [markdown]
   );
 
-  if (allMarkdownNodes.length === 0) {
-    return null
-  }
-
   const dataSource = buildMindNodes(allMarkdownNodes)
 
-  const toolbar = <MindMapToolbar/>
-
   return (
-    <Card title={<><Iconfont type="icon-mind-map"/> 脑图预览</>} key="mindMap" className="mind-map-card" size="small" extra={toolbar}>
+    <Card title={<><Iconfont type="icon-mind-map"/> 脑图预览</>} key="mindMap" className="mind-map-card" size="small" extra={<MindMapToolbar saveTime={modifiedTime}/>}>
       <Space direction="vertical" className="mind-map-container" split={<Divider/>}>
         {dataSource && renderMindMap(dataSource, false, true)}
       </Space>

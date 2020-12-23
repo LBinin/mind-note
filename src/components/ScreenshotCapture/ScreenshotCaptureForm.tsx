@@ -39,7 +39,7 @@ const ScreenshotCaptureForm: React.FC<{
   }
 
   return (
-    <Form form={form} onChange={console.log}>
+    <Form form={form}>
       {/* 选择节点 */}
       <Form.Item label="选择节点" name={ScreenshotCaptureFormItem.TARGET}>
         <Select dropdownMatchSelectWidth={false} placeholder="请选择节点">

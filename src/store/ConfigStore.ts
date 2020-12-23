@@ -1,4 +1,3 @@
-import {observer} from "mobx-react";
 import {observable, action} from "mobx";
 
 export enum UserConfig {
@@ -21,11 +20,6 @@ export enum EditorPosition {
   BOTTOM = "bottom",
 }
 
-interface UserConfigData {
-  [UserConfig.PREVIEW_MODE]: PreviewMode;
-  [UserConfig.MARKDOWN_CODE]: string | null;
-}
-
 export class ConfigStore {
   previewMode = observable.box(this.getUserConfigByKey<PreviewMode>(UserConfig.PREVIEW_MODE) || PreviewMode.LIVE);
   editorPosition = observable.box(this.getUserConfigByKey<EditorPosition>(UserConfig.EDITOR_POSITION) || EditorPosition.LEFT);
@@ -46,13 +40,6 @@ export class ConfigStore {
     }
 
     localStorage.setItem(key, value);
-  }
-
-  getAllUserConfig(): UserConfigData {
-    return {
-      [UserConfig.PREVIEW_MODE]: localStorage.getItem(UserConfig.PREVIEW_MODE) as PreviewMode,
-      [UserConfig.MARKDOWN_CODE]: localStorage.getItem(UserConfig.MARKDOWN_CODE),
-    }
   }
 
   getUserConfigByKey<T extends string>(key: string): T | null {

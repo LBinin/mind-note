@@ -9,21 +9,30 @@ import MarkdownEditor from "./components/MarkdownEditor/MarkdownEditor";
 import "./App.less";
 
 // @ts-ignore
-import MarkdownSourcePath from "./node.md";
-import {EditorPosition} from "./store/ConfigStore";
+// import MarkdownSourcePath from "./node.md";
+import {EditorPosition, UserConfig} from "./store/ConfigStore";
 
 const App = observer(() => {
   const [dataSource, setDataSource] = useState<string | undefined>("");
+  const [markdownLastModifiedTime, setModifiedTime] = useState<Date>();
   const previewMode = configStore.previewMode.get();
   const editorPosition = configStore.editorPosition.get();
 
   useEffect(() => {
-    fetch(MarkdownSourcePath).then(res => res.text()).then(setDataSource)
+    const localMarkdown = configStore.getUserConfigByKey(UserConfig.MARKDOWN_CODE);
+    localMarkdown && setDataSource(localMarkdown);
+    // fetch(MarkdownSourcePath).then(res => res.text()).then(setDataSource)
   }, [])
 
-  const handleMarkdownCodeChange = (md: string | undefined) => {
+  const handleMarkdownCodeChange = (md: string | undefined, saveDate?: Date) => {
     if (previewMode === "live") {
       setDataSource(md);
+    }
+  }
+
+  const handleMarkdownCodeSave = (saveDate: Date) => {
+    if (saveDate) {
+      setModifiedTime(saveDate)
     }
   }
 
@@ -35,10 +44,13 @@ const App = observer(() => {
 
   return (
     <div className={appClassString}>
-      {dataSource && (
-        <MarkdownEditor value={dataSource} onChange={handleMarkdownCodeChange}/>
-      )}
-      {dataSource && <MindMap markdown={dataSource}/>}
+      <MarkdownEditor
+        defaultValue={dataSource}
+        onChange={handleMarkdownCodeChange}
+        onSave={handleMarkdownCodeSave}
+      />
+
+      <MindMap markdown={dataSource} modifiedTime={markdownLastModifiedTime}/>
       {/*<NoteTOC/>*/}
     </div>
   );

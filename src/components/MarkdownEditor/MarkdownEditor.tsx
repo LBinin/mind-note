@@ -1,3 +1,4 @@
+import {debounce} from "lodash";
 import {observer} from "mobx-react";
 import classNames from "classnames";
 import {configStore} from "../../store";
@@ -5,7 +6,7 @@ import {DragSizing} from "react-drag-sizing";
 import {Editor} from '@toast-ui/react-editor';
 import {SPACING_BETWEEN} from "../../constant";
 import {EditorPosition, UserConfig} from "../../store/ConfigStore";
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 
 import "./MarkdownEditor.less";
 import 'codemirror/lib/codemirror.css';
@@ -16,6 +17,9 @@ enum EditorDirection {
   VERTICAL = "vertical",
 }
 
+/**
+ * 获取编辑器高度（获取 LocalStorage 数据或合适高度）
+ */
 const getEditorHeight = (editorDirection: EditorDirection) => {
   // 20: 上下 margin
   const localSavedHeight = Number(configStore.getUserConfigByKey(UserConfig.EDITOR_HEIGHT));
@@ -31,6 +35,9 @@ const getEditorHeight = (editorDirection: EditorDirection) => {
     : documentHeight * 0.3;
 }
 
+/**
+ * 获取编辑器宽度（获取 LocalStorage 数据或合适宽度）
+ */
 const getEditorWidth = (editorDirection: EditorDirection) => {
   // 20: 上下 margin
   const localSavedWidth = Number(configStore.getUserConfigByKey(UserConfig.EDITOR_WIDTH));
@@ -46,11 +53,16 @@ const getEditorWidth = (editorDirection: EditorDirection) => {
     : "100%"; // documentWidth - SPACING_BETWEEN * 2
 }
 
+/**
+ * 保存当前编辑内容到本地
+ */
 const MarkdownEditor: React.FC<{
-  value?: string;
+  defaultValue?: string;
   onChange?: (value: string | undefined) => void;
+  onSave?: (saveTime: Date) => void;
+  saveDebounce?: number; // 保存 Markdown 时间间隔（单位 s，默认 3s）
 }> = props => {
-  const {value, onChange} = props;
+  const {defaultValue, onChange, onSave, saveDebounce = 3} = props;
 
   // 当前编辑器位于何处（上下左右）
   const editorPosition = configStore.editorPosition.get();
@@ -83,6 +95,11 @@ const MarkdownEditor: React.FC<{
     }
   }, [editorPosition])
 
+  const saveCodeToStorage = useCallback(debounce((code: string, cb?: (saveTime: Date) => void) => {
+    configStore.saveUserConfig(UserConfig.MARKDOWN_CODE, code)
+    cb && cb(new Date());
+  }, saveDebounce * 1000), [saveDebounce])
+
   // 编辑器实例
   const editorRef = useRef<Editor>(null)
 
@@ -104,12 +121,24 @@ const MarkdownEditor: React.FC<{
     setWidth(getEditorWidth(editorDirection));
   }, [editorDirection]);
 
+  useEffect(() => {
+    if (!editorRef.current || !defaultValue) {
+      return;
+    }
+
+    const editor = editorRef.current.getInstance();
+    if (!editor.getMarkdown()) {
+      editor.setMarkdown(defaultValue, true);
+    }
+  }, [defaultValue]);
+
   /**
    * 相应 Markdown 内容变化
    */
   const handleEditorContentChange = (params: any) => {
     if (params.source === "markdown" && editorRef.current) {
       const content = editorRef.current.getInstance().getMarkdown();
+      saveCodeToStorage(content, onSave)
       onChange && onChange(content);
     }
   }
@@ -118,7 +147,9 @@ const MarkdownEditor: React.FC<{
    * 储存 Editor 尺寸信息到本地
    */
   const handleDragHandlerDragEnd = () => {
-    if (!editorRef.current) { return; }
+    if (!editorRef.current) {
+      return;
+    }
 
     if (editorDirection === EditorDirection.VERTICAL) {
       configStore.saveUserConfig(UserConfig.EDITOR_HEIGHT, editorRef.current.getRootElement().clientHeight + "");
@@ -146,7 +177,6 @@ const MarkdownEditor: React.FC<{
     >
       <Editor
         ref={editorRef}
-        initialValue={value}
         previewStyle="tab"
         height="100%"
         initialEditType="markdown"

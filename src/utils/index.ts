@@ -1,5 +1,4 @@
-import {Node} from "unist";
-import {ASTNode, HeadingContent, Markdown, MarkdownDepth, MarkdownHeading, MindNodeItem} from "../model";
+import {ASTNode, Markdown, MarkdownHeading, MindNodeItem} from "../model";
 
 /**
  * 构建 Mind Nodes 层级关系
@@ -70,6 +69,10 @@ export function buildMindNodes(nodes: ASTNode[]) {
   }
 
   const firstHeadingNodeIndex = nodes.findIndex(i => i.type === Markdown.Heading);
+
+  if (firstHeadingNodeIndex === -1) {
+    return [];
+  }
 
   return buildMindNodes(
     (nodes[firstHeadingNodeIndex] as MarkdownHeading).depth,
