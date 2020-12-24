@@ -6,7 +6,9 @@ export enum Markdown {
   Paragraph = "paragraph",
   Strong = "strong",
   ThematicBreak = "thematicBreak",
-  Emphasis = "emphasis"
+  Emphasis = "emphasis",
+  List = "list",
+  ListItem = "listItem",
 }
 
 // https://github.com/syntax-tree/mdast
@@ -20,7 +22,7 @@ export type MarkdownDepth = 1 | 2 | 3 | 4 | 5 | 6;
 
 // 支持的语法中可能用到的行内节点
 export type HeadingContent = MarkdownText | MarkdownInlineCode | MarkdownStrong | MarkdownEmphasis;
-export type BlockquoteContent = MarkdownParagraph;
+export type BlockquoteContent = MarkdownParagraph | MarkdownList;
 
 export type ParagraphContent = MarkdownText | MarkdownInlineCode | MarkdownStrong | MarkdownEmphasis;
 export type StrongContent = MarkdownText | MarkdownInlineCode;
@@ -43,10 +45,20 @@ export interface MarkdownBlockquote {
 export interface MarkdownThematicBreak {
   type: Markdown.ThematicBreak,
 }
-
+// 段落
 export interface MarkdownParagraph {
   type: Markdown.Paragraph,
   children: ParagraphContent[];
+}
+// 列表
+export interface MarkdownList {
+  type: Markdown.List,
+  ordered: boolean;
+  children: MarkdownListItem[];
+}
+export interface MarkdownListItem {
+  type: Markdown.ListItem,
+  children: Array<MarkdownList | MarkdownParagraph>;
 }
 
 /* 行内节点（基本节点） */

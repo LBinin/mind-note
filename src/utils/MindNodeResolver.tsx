@@ -8,7 +8,7 @@ import {
   HeadingContent,
   MarkdownParagraph,
   MarkdownStrong,
-  MarkdownEmphasis
+  MarkdownEmphasis, MarkdownList, MarkdownListItem
 } from "../model";
 
 /**
@@ -40,6 +40,8 @@ export function resolveCallout(callout: BlockquoteContent) {
   switch (callout.type) {
     case Markdown.Paragraph:
       return <p>{resolveParagraph(callout)}</p>
+    case Markdown.List:
+      return resolveList(callout);
     default:
       return null;
   }
@@ -63,6 +65,27 @@ export function resolveParagraph(paragraph: MarkdownParagraph) {
         return null;
     }
   });
+}
+
+
+export function resolveList(list: MarkdownList, index?: number) {
+  const listItems = list.children.map((item, index) =>
+    <li key={index}>{resolveListItem(item)}</li>
+  );
+  return list.ordered ? <ol key={index}>{listItems}</ol> : <ul key={index}>{listItems}</ul>
+}
+
+export function resolveListItem(item: MarkdownListItem) {
+  return item.children.map((content, index) => {
+    switch (content.type) {
+      case Markdown.Paragraph:
+        return <p key={index}>{resolveParagraph(content)}</p>;
+      case Markdown.List:
+        return resolveList(content, index);
+      default:
+        return null;
+    }
+  })
 }
 
 /**
