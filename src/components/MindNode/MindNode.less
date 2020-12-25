@@ -14,73 +14,42 @@
 @color-code-font: #e05250;
 @color-strong-font: #e05250;
 
-@color-node-bg: #fff;
+:root {
+  --color-node-primary: #e05250;
+  --color-node-bg: #fff;
+  --color-node-border: var(--color-node-primary);
+  --color-node-font: var(--color-node-primary);
+  --color-node-text: #303133;
+  --color-node-sub-text: #909399;
+  --color-node-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
 
+// 基础样式
 .mind-node {
   display: flex;
   align-items: center;
   position: relative;
   width: fit-content;
 
-  --color-node-primary: #e05250;
-  --color-node-border: var(--color-node-primary);
-  --color-node-font: var(--color-node-primary);
-
-  &.root-node {
-    margin: 0 auto;
-  }
-
-  // 彩色主题
-  &.rainbow {
-    & > .mind-node-children {
-      & > .mind-node:nth-of-type(1) {
-        &, .mind-node {
-          --color-node-primary: #e05250;
-        }
-      }
-      & > .mind-node:nth-of-type(2) {
-        &, .mind-node {
-          --color-node-primary: #F8932E;
-        }
-      }
-      & > .mind-node:nth-of-type(3) {
-        &, .mind-node {
-          --color-node-primary: #FEC938;
-        }
-      }
-    }
-  }
-
-  &.collapsed {
-    & > .mind-node-children {
-      display: none;
-    }
-
-    & > .mind-node-body {
-      & > .mind-node-body-collapse-btn {
-        opacity: 1;
-      }
-    }
-  }
-
   &-body {
     border: @border-width solid var(--color-node-border);
     border-radius: @node-border-radius;
     margin: @node-spacing-height @node-spacing-width;
     padding: 0.6em 1em;
-    background: @color-node-bg;
+    background: var(--color-node-bg);
     position: relative;
+    box-shadow: var(--color-node-shadow);
 
     &-title {
       font-size: 1.1em;
-      color: #303133;
+      color: var(--color-node-text);
       white-space: pre;
       line-height: 1.8em;
     }
 
     &-callout {
       font-size: 0.9em;
-      color: #909399;
+      color: var(--color-node-sub-text);
       border-left: 4px solid #C0C4CC;
       padding-left: 0.8em;
       margin: 0.5em 0 0.3em;
@@ -109,9 +78,9 @@
       z-index: 2;
       vertical-align: middle;
       padding: 0;
-      background: @color-node-bg;
+      background: #fff;
       color: var(--color-node-border);
-      //font-weight: bold;
+      box-shadow: -1px 2px 6px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       transition: opacity 0.25s;
       opacity: 0;
@@ -214,6 +183,53 @@
       &::before {
         content: unset;
       }
+    }
+  }
+}
+
+// 定制样式
+.mind-node {
+  // 彩色主题
+  &.rainbow {
+    & > .mind-node-children {
+      & > .mind-node:nth-of-type(1) {
+        &, .mind-node {
+          --color-node-primary: #e05250;
+        }
+      }
+      & > .mind-node:nth-of-type(2) {
+        &, .mind-node {
+          --color-node-primary: #F8932E;
+        }
+      }
+      & > .mind-node:nth-of-type(3) {
+        &, .mind-node {
+          --color-node-primary: #FEC938;
+        }
+      }
+    }
+  }
+
+  // 折叠状态
+  &.collapsed {
+    & > .mind-node-children {
+      display: none;
+    }
+
+    & > .mind-node-body {
+      & > .mind-node-body-collapse-btn {
+        opacity: 1;
+      }
+    }
+  }
+
+  // 根节点
+  &.root-node {
+    margin: 0 auto;
+    & > .mind-node-body {
+      --color-node-bg: #e05250;
+      --color-node-text: #fff;
+      --color-node-shadow: 0 5px 12px rgba(242, 82, 80, 0.4);
     }
   }
 }

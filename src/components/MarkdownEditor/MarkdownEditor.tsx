@@ -176,6 +176,7 @@ const MarkdownEditor: React.FC<{
       style={{minHeight: 100, minWidth: 150, width, height}}
     >
       <Editor
+        placeholder="在这写下笔记，看看右边的效果吧"
         ref={editorRef}
         previewStyle="tab"
         height="100%"

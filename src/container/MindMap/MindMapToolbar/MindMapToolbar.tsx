@@ -35,9 +35,8 @@ const MindMapToolbar: React.FC<{
   }
 
   return (<>
-    <Tooltip title="[待实现] 使用 ctrl/cmd + s 保存预览（非实时预览模式）"><Checkbox disabled={true} checked={true} onChange={handlePreviewModeChange}>实时预览</Checkbox></Tooltip>
-
-    <Space>
+    <Space className="mind-map-toolbar">
+      <Tooltip title="[待实现] 使用 ctrl/cmd + s 保存预览（非实时预览模式）"><Checkbox disabled={true} checked={true} onChange={handlePreviewModeChange}>实时预览</Checkbox></Tooltip>
       <Divider type="vertical" />
       <LastSaveTime time={saveTime}/>
       {/* 编辑器布局 */}

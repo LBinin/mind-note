@@ -49,7 +49,13 @@ const MindMap: React.FC<{
   const dataSource = buildMindNodes(allMarkdownNodes)
 
   return (
-    <Card title={<><Iconfont type="icon-mind-map"/> 脑图预览</>} key="mindMap" className="mind-map-card" size="small" extra={<MindMapToolbar saveTime={modifiedTime}/>}>
+    <Card
+      title={<><Iconfont type="icon-mind-map"/> 脑图预览</>}
+      key="mindMap"
+      size="small"
+      className="mind-map-card"
+      extra={<MindMapToolbar saveTime={modifiedTime}/>}
+    >
       <Space direction="vertical" className="mind-map-container" split={<Divider/>}>
         {dataSource && renderMindMap(dataSource, false, true)}
       </Space>

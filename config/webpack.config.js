@@ -96,7 +96,7 @@ module.exports = function (webpackEnv) {
   const shouldUseReactRefresh = env.raw.FAST_REFRESH;
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, preProcessorOptions) => {
     const loaders = [
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
@@ -148,9 +148,9 @@ module.exports = function (webpackEnv) {
         },
         {
           loader: require.resolve(preProcessor),
-          options: {
+          options: Object.assign({
             sourceMap: true,
-          },
+          }, preProcessorOptions),
         }
       );
     }
@@ -541,7 +541,15 @@ module.exports = function (webpackEnv) {
                   importLoaders: 2,
                   sourceMap: isEnvProduction && shouldUseSourceMap,
                 },
-                'less-loader'
+                'less-loader',
+                {
+                  lessOptions: {
+                    modifyVars: {
+                      'primary-color': '#e05250',
+                    },
+                    javascriptEnabled: true,
+                  }
+                }
               ),
               sideEffects: true,
             },
