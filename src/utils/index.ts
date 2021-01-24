@@ -78,3 +78,11 @@ export function buildMindNodes(nodes: ASTNode[]) {
     (nodes[firstHeadingNodeIndex] as MarkdownHeading).depth,
   );
 }
+
+export function generateNodeId(title: string) {
+  try {
+    return encodeURIComponent(title);
+  } catch {
+    return title;
+  }
+}

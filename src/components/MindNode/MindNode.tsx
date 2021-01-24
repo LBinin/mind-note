@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import React, {useState} from "react";
+import { generateNodeId } from "../../utils";
 import {NODE_ROOT_CLASS} from "../../constant";
 import {BlockquoteContent, HeadingContent} from "../../model";
 import {resolveCallout, resolveTitle} from "../../utils/MindNodeResolver";
@@ -30,7 +31,7 @@ const MindNode: React.FC<{
     e.stopPropagation();
   }
 
-  const currNodeId = encodeURIComponent("" + resolveTitle(title, true));
+  const currNodeId = generateNodeId("" + resolveTitle(title, true));
 
   return (
     <div className={mindNodeClassString} id={currNodeId}>
