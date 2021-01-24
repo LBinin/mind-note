@@ -38,13 +38,14 @@
     padding: 0.6em 1em;
     background: var(--color-node-bg);
     position: relative;
-    box-shadow: var(--color-node-shadow);
+    // box-shadow: var(--color-node-shadow);
 
     &-title {
       font-size: 1.1em;
       color: var(--color-node-text);
       white-space: pre;
-      line-height: 1.8em;
+      line-height: 2em;
+      font-weight: bold;
     }
 
     &-callout {
@@ -126,7 +127,7 @@
       position: absolute;
       left: 0;
       background: var(--color-node-border);
-      transform: translateX(-50%);
+      // transform: translateX(-50%);
     }
   }
 
@@ -230,6 +231,20 @@
       --color-node-bg: #e05250;
       --color-node-text: #fff;
       --color-node-shadow: 0 5px 12px rgba(242, 82, 80, 0.4);
+
+      & > .mind-node-body-title {
+        font-weight: normal;
+      }
+
+      & > .mind-node-body-callout {
+        color: rgba(255,255,255, 0.85);
+        border-color: rgba(255,255,255, 0.5);
+      }
+
+      // 文本样式
+      code {
+        background-color: rgba(255,255,255, 0.9);
+      }
     }
   }
 }
@@ -238,8 +253,8 @@
 .mind-node {
   code {
     background: @color-code-bg;
-    padding: 0.3em 0.6em;
-    border-radius: 6px;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
     color: var(--color-node-font);
     //color: @color-code-font;
     vertical-align: middle;
